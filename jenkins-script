@@ -1,0 +1,26 @@
+node {
+
+stage ('code checkout') {
+git (url: 'https://github.com/suhas5344/php-docker-jenkins.git', branch: 'master')
+//this is public repo. so not need to give github credi.
+}
+
+stage ('build docker image') {
+sh 'docker build -t dockerhub-username/image-name:tag'
+}
+
+stage ('push docker image') {
+sh 'docker login -u username -p pwd'
+// can use credientional strig to hide dockerhub pwd
+sh 'docker push dockerhub-username/imagename:tag'
+}
+
+stage ('run container on server') {
+
+def DockerRun= 'docker run -p 80:80 -d -name usrname/image'
+ // login to server and run container
+// add ssh credential in jenkins
+sh 'ssh -o StrictHostKeyChecking=no user@ipv4 ${DockerRun}'
+}
+
+}
