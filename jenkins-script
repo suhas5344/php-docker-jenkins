@@ -4,23 +4,22 @@ stage ('code checkout') {
 git (url: 'https://github.com/suhas5344/php-docker-jenkins.git', branch: 'master')
 //this is public repo. so not need to give github credi.
 }
-
 stage ('build docker image') {
-sh 'docker build -t dockerhub-username/image-name:tag'
+sh 'docker build  -t image-name .'
 }
-
 stage ('push docker image') {
-sh 'docker login -u username -p pwd'
-// can use credientional strig to hide dockerhub pwd
-sh 'docker push dockerhub-username/imagename:tag'
+sh 'docker login -u suhas7350 -p @Suhas5344'
+ //entional strig to hide dockerhub pwd
+ sh 'docker tag image-name:latest suhas7350/su:hello-world'
+sh 'docker push suhas7350/su:hello-world'
 }
-
 stage ('run container on server') {
 
 def DockerRun= 'docker run -p 80:80 -d -name usrname/image'
- // login to server and run container
-// add ssh credential in jenkins
-sh 'ssh -o StrictHostKeyChecking=no user@ipv4 ${DockerRun}'
+ //install ssh agent plugin 
+sshagent(['dev-server']) {
+sh 'ssh -o Stricthostkeychecking=no ec2-user@ipv4 ${dockerRun}'
+}
 }
 
 }
